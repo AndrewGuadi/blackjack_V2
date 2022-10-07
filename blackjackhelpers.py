@@ -74,7 +74,7 @@ class Player(User):
     def place_bet(self):
 
         while True:
-            response = input("Make Bet (1/2/5/10/25/50/100): ")
+            response = input(f"BALANCE: {self.balance}\nMake Bet (1/2/5/10/25/50/100): ")
 
             try:
                 current_bet = int(response)
@@ -82,13 +82,16 @@ class Player(User):
                 print("Please Enter a Valid number")
 
             else: 
-                if current_bet not in (1, 2, 5, 10, 25, 50, 100):
+                if current_bet not in (1, 2, 5, 10, 25, 50,100, 1000):
                     print("Sorry, only bets of exactly 1, 2, 5, 10, 25, 50 & 100 are allowed.")
                 else:
-                     self.balance -= current_bet
-                     self.bet = current_bet
-                     print(f"${self.bet} BET PLACED")
-                     break
+                    if current_bet <= self.balance:
+                        self.balance -= current_bet
+                        self.bet = current_bet
+                        print(f"${self.bet} BET PLACED")
+                        break
+                    else:
+                        print(f"Amount Entered Higher than Balance. MAXIMUM BET = {self.balance}")
 
     def reset_bet(self):
         self.bet = 0
@@ -338,7 +341,14 @@ class Game:
                 pass
 
     def end_game(self):
-        print("This is where we compare the end game scores and payout")
+        
+        if self.player.score > self.dealer.score:
+            print("YOU WIN!")
+            self.payout()
+            #payout to player
+            pass
+        elif self.player.score >= self.dealer.score:
+            print("DEALER WINS!!")
         self.reset_hands()
         self.player.reset_bet()
         keep_playing_variable = self.keep_playing()
@@ -355,13 +365,3 @@ class Game:
 
         if response == "n":
             return False
-
-
-
-
-            
-
-
-
-    
-    
