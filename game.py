@@ -10,11 +10,3 @@ new_game = Game(player1, dealer1, game_shoe)
 while keep_playing_variable:
     new_game.game_begin()
     new_game.middle_game()
-
-
-
-
-###maybe better written as game.begin_game(), game.middle_game() game.end_game()
-
-
-
