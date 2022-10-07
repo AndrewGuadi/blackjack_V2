@@ -1,7 +1,8 @@
-import abc, itertools, random, time
+import abc
+import itertools
+import random
 from enum import Enum
 from dataclasses import dataclass
-
 
 
 class User(metaclass=abc.ABCMeta):
@@ -35,19 +36,17 @@ class User(metaclass=abc.ABCMeta):
     def discard_hand(self):
         self.hand = []
 
-
     def calculate_score(self):
         self.score = 0
         for card in self.hand:
             self.score += card.rank.points
 
     def print_score(self):
-        print(f"Total Score: {self.score}")   
+        print(f"Total Score: {self.score}")
 
     def add_card_to_hand(self, card):
         self.hand.append(card)
 
-    
 
 class Player(User):
 
@@ -56,7 +55,6 @@ class Player(User):
         self.balance = 200
         self.define_name()
         self.bet = self.place_bet()
-        
 
     def define_name(self):
 
@@ -70,20 +68,22 @@ class Player(User):
                 self.name = user_name
                 print("username set!")
                 break
-    
+
     def place_bet(self):
 
         while True:
-            response = input(f"BALANCE: {self.balance}\nMake Bet (1/2/5/10/25/50/100): ")
+            response = input(
+                f"BALANCE: {self.balance}\nMake Bet (1/2/5/10/25/50/100): ")
 
             try:
                 current_bet = int(response)
             except ValueError:
                 print("Please Enter a Valid number")
 
-            else: 
-                if current_bet not in (1, 2, 5, 10, 25, 50,100, 1000):
-                    print("Sorry, only bets of exactly 1, 2, 5, 10, 25, 50 & 100 are allowed.")
+            else:
+                if current_bet not in (1, 2, 5, 10, 25, 50, 100, 1000):
+                    print(
+                        "Sorry, only bets of exactly 1, 2, 5, 10, 25, 50 & 100 are allowed.")
                 else:
                     if current_bet <= self.balance:
                         self.balance -= current_bet
@@ -91,11 +91,12 @@ class Player(User):
                         print(f"${self.bet} BET PLACED")
                         break
                     else:
-                        print(f"Amount Entered Higher than Balance. MAXIMUM BET = {self.balance}")
+                        print(
+                            f"Amount Entered Higher than Balance. MAXIMUM BET = {self.balance}")
 
     def reset_bet(self):
         self.bet = 0
-    
+
     def get_user_action(self):
         likely_action = ''
 
@@ -113,25 +114,18 @@ class Player(User):
                     elif response[i] == actions[1][i]:
                         counter += 1
                         likely_action = actions[1]
-                except:
+                except ValueError:
                     "just keep swimming. I feel like its bad practice but I used the try loop "
-            
+
             if counter < 2:
                 print("Please Re-enter: ")
             else:
-                ##print(f"Youve Entered {likely_action}")
                 return likely_action
                 break
 
-        
+    # What can a player do that a dealer cannot?
+    # makebet
 
-
-
-
-
-
-    #What can a player do that a dealer cannot?
-    #makebet
 
 class Dealer(User):
 
@@ -142,9 +136,10 @@ class Dealer(User):
 
     def define_name(self):
         self.name = "Dealer"
-    
-    #what can a dealer do that a player cannot?
-    #show one card on deal
+
+    # what can a dealer do that a player cannot?
+    # show one card on deal
+
 
 class Rank(Enum):
     TWO = ('2', 2)
@@ -168,7 +163,6 @@ class Rank(Enum):
     @property
     def points(self):
         return self.value[1]
-
 
 
 class Suits(Enum):
@@ -196,22 +190,20 @@ class Card:
 
     def __str__(self):
         return f"{self.rank.symbol} of {self.suit.suit_name} {self.suit.symbol}"
-        
 
 
 class Deck:
     def __init__(self):
-        self.deck = [Card(rank, suit) for rank, suit in itertools.product(Rank, Suits)]
+        self.deck = [Card(rank, suit)
+                     for rank, suit in itertools.product(Rank, Suits)]
 
         random.shuffle(self.deck)
 
-
     def reveal_deck(self):
-        
+
         for card in self.deck:
             card = str(card)
             print(card)
-
 
 
 class Shoe:
@@ -222,7 +214,7 @@ class Shoe:
         for i in range(5):
             for card in Deck().deck:
                 self.new_shoe.append(card)
-                      
+
     def reveal_shoe(self):
 
         print(self.new_shoe)
@@ -240,31 +232,25 @@ class Game:
         self.dealer = dealer
         self.game_shoe = shoe
 
-
     def deal_cards(self, cards_per_player):
 
         for i in range(cards_per_player):
             self.player.add_card_to_hand(self.game_shoe.deal_one_card())
             self.dealer.add_card_to_hand(self.game_shoe.deal_one_card())
 
-        ###delete this (prints out the current hand data)
-        ###print(self.player.hand)
-        ###print(self.dealer.hand)
-
+        # delete this (prints out the current hand data)
+        # print(self.player.hand)
+        # print(self.dealer.hand)
 
     def hit(self, person):
-      
+
         person.add_card_to_hand(self.game_shoe.deal_one_card())
         person.calculate_score()
         person.print_hand(len(person.hand))
         person.print_score()
-            
-        
 
     def stand(self):
-        print(f"Chose to stay")
-        
-        
+        print("Chose to stay")
 
     def play_action(self, action, person):
         if action == "hit":
@@ -312,13 +298,11 @@ class Game:
     def reset_hands(self):
         self.player.discard_hand()
         self.dealer.discard_hand()
-    
 
     def payout(self):
         print(self.player.bet)
         self.dealer.balance -= self.player.bet
         self.player.balance += (self.player.bet * 2)
-
 
     def game_begin(self):
         if self.player.bet == 0:
@@ -337,29 +321,29 @@ class Game:
             if self.dealer.score < 22:
                 self.end_game()
             else:
-                ##ask next game function
+                # ask next game function
                 pass
 
     def end_game(self):
-        
+
         if self.player.score > self.dealer.score:
             print("YOU WIN!")
             self.payout()
-            #payout to player
+            # payout to player
             pass
         elif self.player.score >= self.dealer.score:
             print("DEALER WINS!!")
         self.reset_hands()
         self.player.reset_bet()
         keep_playing_variable = self.keep_playing()
-        ##determine winner
-        #payout winner
-        #reset_bet()
-        #ask next game function
+        # determine winner
+        # payout winner
+        # reset_bet()
+        # ask next game function
         return keep_playing_variable
 
     def keep_playing(self):
-        
+
         response = input("Would you like to keep playing? Y/N: ")
         response = response.lower().strip()
 
