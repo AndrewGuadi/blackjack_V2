@@ -1,8 +1,1 @@
-
---The first thing I want to do is to create a newplayer when the game begins:
-
-        -setting name
-        -setting balace
-        -creating an empty hand
-        -creating a 0 score
-
+I am not quite sure what is supposed to be in a read me. This is will be my goal for 10/08/2022
