@@ -108,10 +108,10 @@ class Player(User):
             counter = 0
             for i in range(len(response)):
                 try:
-                    if response[i] == actions[0][i]:
+                    if i < 2 and response[i] == actions[0][i]:
                         counter += 1
                         likely_action = actions[0]
-                    elif response[i] == actions[1][i]:
+                    elif i < 4 and response[i] == actions[1][i]:
                         counter += 1
                         likely_action = actions[1]
                 except ValueError:
