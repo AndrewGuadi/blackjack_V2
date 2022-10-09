@@ -70,6 +70,10 @@ class Player(User):
                 break
 
     def place_bet(self):
+        
+        if self.balance <= 0:
+            print("Sorry! It looks like your balance is at 0! Come back again!")
+            exit()
 
         while True:
             response = input(
