@@ -97,8 +97,9 @@ class Player(User):
     def reset_bet(self):
         self.bet = 0
 
-    def get_user_action(self):
+   def get_user_action(self):
         likely_action = ''
+        likely_actions_list = []
 
         while True:
             actions = ("hit", "stand")
@@ -108,18 +109,29 @@ class Player(User):
             counter = 0
             for i in range(len(response)):
                 try:
-                    if i < 2 and response[i] == actions[0][i]:
+                    if i < len(actions[0]) and response[i] == actions[0][i]:
                         counter += 1
                         likely_action = actions[0]
+                        likely_actions_list.append(likely_action)
                     elif i < 4 and response[i] == actions[1][i]:
                         counter += 1
                         likely_action = actions[1]
+                        likely_actions_list.append(likely_action)
                 except ValueError:
                     "just keep swimming. I feel like its bad practice but I used the try loop "
 
             if counter < 2:
                 print("Please Re-enter: ")
             else:
+                print(likely_actions_list)
+                hit_count = likely_actions_list.count("hit")
+                stand_count = likely_actions_list.count("stand")
+                if hit_count > stand_count:
+                    likely_action = actions[0]
+                elif stand_count > hit_count:
+                    likely_action = actions[1]
+                else:
+                    ("Your loop failed")  
                 return likely_action
                 break
 
